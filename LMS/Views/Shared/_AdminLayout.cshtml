@@ -1,0 +1,140 @@
+﻿@{
+    var userEmail = Session["UserEmail"] ?? "Admin";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Admin</title>
+    <style>
+        /* Reset & basic styles */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background:#007bff;
+            color:#fff;
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+            flex-shrink:0;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom:30px;
+            font-size:1.5rem;
+        }
+
+        .nav-link {
+            display:block;
+            padding:12px 20px;
+            color:#fff;
+            text-decoration:none;
+            font-weight:500;
+            transition:0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background:#0056b3;
+            border-left:4px solid #ffc107;
+        }
+
+        /* Header */
+        .header {
+            background:#fff;
+            color:#333;
+            height:60px;
+            display:flex;
+            align-items:center;
+            justify-content: flex-end;
+            padding:0 30px;
+            box-shadow:0 2px 6px rgba(0,0,0,0.1);
+            position: fixed;
+            left:220px;
+            right:0;
+            top:0;
+            z-index:1000;
+        }
+
+        .logout-btn {
+            background:#007bff;
+            color:#fff;
+            border:none;
+            padding:8px 15px;
+            border-radius:5px;
+            cursor:pointer;
+            font-weight:600;
+            transition:0.2s;
+        }
+        .logout-btn:hover { background:#0056b3; }
+
+        /* Main content */
+        .main {
+            flex:1;
+            margin-left:220px;
+            margin-top:60px;
+            padding:30px;
+        }
+
+        /* Cards */
+        .cards {
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap:20px;
+        }
+        .card {
+            background:#fff;
+            border-radius:10px;
+            padding:20px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+            text-align:center;
+        }
+        .card h2 {
+            font-size:2rem;
+            margin-bottom:10px;
+            color:#007bff;
+        }
+        .card p {
+            font-size:1rem;
+            color:#333;
+        }
+
+        @@media(max-width:768px){
+            .sidebar { width:60px; }
+            .header { left:60px; padding:0 15px; }
+            .main { margin-left:60px; padding:15px; }
+            .nav-link span { display:none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin</h2>
+        <a href="@Url.Action("Index", "Admin")" class="nav-link active">Dashboard</a>
+        <a href="@Url.Action("Students", "Admin")" class="nav-link">Students</a>
+        <a href="@Url.Action("Faculty", "Admin")" class="nav-link">Faculty</a>
+        <a href="@Url.Action("Librarians", "Admin")" class="nav-link">Librarians</a>
+        <a href="@Url.Action("Books", "Admin")" class="nav-link">Books</a>
+    </div>
+
+    <div class="header">
+        <span style="margin-right:15px;">@userEmail</span>
+        <form method="get" action="@Url.Action("Logout", "Admin")">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+
+    <div class="main">
+        @RenderBody()
+    </div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";  // Use the shared admin layout
+    ViewBag.Title = "Admin Dashboard";
+}
+
+<div class="container">
+
+    <div class="cards">
+        <div class="card">
+            <h2>@(ViewBag.TotalStudents ?? 0)</h2>
+            <p>Registered Students</p>
+        </div>
+        <div class="card">
+            <h2>@(ViewBag.TotalFaculty ?? 0)</h2>
+            <p>Faculty Members</p>
+        </div>
+        <div class="card">
+            <h2>@(ViewBag.TotalLibrarians ?? 0)</h2>
+            <p>Librarians</p>
+        </div>
+        <div class="card">
+            <h2>@(ViewBag.TotalBooks ?? 0)</h2>
+            <p>Books Available</p>
+        </div>
+    </div>
+</div>

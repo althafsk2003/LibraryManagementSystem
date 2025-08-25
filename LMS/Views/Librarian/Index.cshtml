@@ -1,0 +1,25 @@
+﻿@{
+    Layout = "~/Views/Shared/_LibrarianLayout.cshtml";
+    ViewBag.Title = "Librarian Dashboard";
+}
+
+
+    <div class="cards">
+        <div class="card">
+            <h2>@ViewBag.TotalBooks</h2>
+            <p>Total Books</p>
+        </div>
+        <div class="card">
+            <h2>@ViewBag.BooksIssued</h2>
+            <p>Books Issued</p>
+        </div>
+        <div class="card">
+            <h2>@ViewBag.BooksReserved</h2>
+            <p>Books Reserved</p>
+        </div>
+        <div class="card">
+            <h2>@ViewBag.OverdueBooks</h2>
+            <p>Overdue Books</p>
+        </div>
+    </div>
+</div>

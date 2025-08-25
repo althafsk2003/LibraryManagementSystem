@@ -1,0 +1,25 @@
+﻿@{
+    Layout = "~/Views/Shared/_FacultyLayout.cshtml";
+    ViewBag.Title = "Faculty Dashboard";
+}
+
+
+
+<div class="cards">
+    <div class="card">
+        <h2>@ViewBag.TotalStudents</h2>
+        <p>Assigned Students</p>
+    </div>
+    <div class="card">
+        <h2>@ViewBag.TotalBooks</h2>
+        <p>Books Managed</p>
+    </div>
+    <div class="card">
+        <h2>@ViewBag.AssignedClasses</h2>
+        <p>Assigned Classes</p>
+    </div>
+    <div class="card">
+        <h2>@ViewBag.Events</h2>
+        <p>Events Organized</p>
+    </div>
+</div>
