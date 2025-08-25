@@ -8,133 +8,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title - Admin</title>
     <style>
-        /* Reset & basic styles */
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            background: #f0f2f5;
-            display: flex;
-            min-height: 100vh;
-        }
+        /* Reset */
+        body { margin:0; font-family: Arial, sans-serif; background:#f0f2f5; }
 
         /* Sidebar */
         .sidebar {
-            width: 220px;
+            width:220px;
             background:#007bff;
             color:#fff;
-            display: flex;
-            flex-direction: column;
-            padding-top: 20px;
-            flex-shrink:0;
+            position:fixed;
+            top:0; left:0; bottom:0;
+            padding-top:60px;
+            transition: transform 0.3s ease;
+            z-index:1001;
         }
+        .sidebar.collapsed { transform:translateX(-220px); }
 
         .sidebar h2 {
-            text-align: center;
+            text-align:center;
             margin-bottom:30px;
             font-size:1.5rem;
-        }
-
-        .nav-link {
-            display:block;
-            padding:12px 20px;
             color:#fff;
-            text-decoration:none;
-            font-weight:500;
-            transition:0.2s;
+            position:relative;
+            z-index:10;
         }
 
-        .nav-link:hover, .nav-link.active {
-            background:#0056b3;
-            border-left:4px solid #ffc107;
-        }
+        .sidebar a { display:block; padding:12px 20px; color:#fff; text-decoration:none; }
+        .sidebar a:hover, .sidebar a.active { background:#0056b3; border-left:4px solid #ffc107; }
 
         /* Header */
         .header {
-            background:#fff;
-            color:#333;
+            position:fixed;
+            top:0; left:0; right:0;
             height:60px;
+            background:#fff;
             display:flex;
+            justify-content:space-between;
             align-items:center;
-            justify-content: flex-end;
-            padding:0 30px;
+            padding:0 20px;
             box-shadow:0 2px 6px rgba(0,0,0,0.1);
-            position: fixed;
-            left:220px;
-            right:0;
-            top:0;
-            z-index:1000;
+            z-index:1002;
+            transition:left 0.3s ease;
+        }
+        .header.collapsed { left:0; }
+
+        .hamburger {
+            font-size:24px;
+            cursor:pointer;
+            background:none;
+            border:none;
         }
 
         .logout-btn {
             background:#007bff;
             color:#fff;
             border:none;
-            padding:8px 15px;
+            padding:8px 12px;
             border-radius:5px;
             cursor:pointer;
             font-weight:600;
-            transition:0.2s;
         }
         .logout-btn:hover { background:#0056b3; }
 
         /* Main content */
         .main {
-            flex:1;
             margin-left:220px;
             margin-top:60px;
-            padding:30px;
-        }
-
-        /* Cards */
-        .cards {
-            display:grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap:20px;
-        }
-        .card {
-            background:#fff;
-            border-radius:10px;
             padding:20px;
-            box-shadow:0 4px 10px rgba(0,0,0,0.1);
-            text-align:center;
+            transition: margin-left 0.3s ease;
         }
-        .card h2 {
-            font-size:2rem;
-            margin-bottom:10px;
-            color:#007bff;
-        }
-        .card p {
-            font-size:1rem;
-            color:#333;
-        }
+        .main.collapsed { margin-left:0; }
 
-        @@media(max-width:768px){
-            .sidebar { width:60px; }
-            .header { left:60px; padding:0 15px; }
-            .main { margin-left:60px; padding:15px; }
-            .nav-link span { display:none; }
+        /* Overlay */
+        .overlay {
+            position:fixed;
+            top:0; left:0;
+            width:100%; height:100%;
+            background:rgba(0,0,0,0.2);
+            display:none;
+            z-index:1000;
+        }
+        .overlay.active { display:block; }
+
+        /* Responsive */
+        @@media(max-width:768px) {
+            .sidebar { width:200px; transform:translateX(-200px); }
+            .main { margin-left:0; }
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
         <h2>Admin</h2>
-        <a href="@Url.Action("Index", "Admin")" class="nav-link active">Dashboard</a>
-        <a href="@Url.Action("Students", "Admin")" class="nav-link">Students</a>
-        <a href="@Url.Action("Faculty", "Admin")" class="nav-link">Faculty</a>
-        <a href="@Url.Action("Librarians", "Admin")" class="nav-link">Librarians</a>
-        <a href="@Url.Action("Books", "Admin")" class="nav-link">Books</a>
+        <a href="@Url.Action("Index", "Admin")" class="active">Dashboard</a>
+        <a href="@Url.Action("Students", "Admin")">Students</a>
+        <a href="@Url.Action("Faculty", "Admin")">Faculty</a>
+        <a href="@Url.Action("Librarians", "Admin")">Librarians</a>
+        <a href="@Url.Action("Books", "Admin")">Books</a>
     </div>
 
-    <div class="header">
-        <span style="margin-right:15px;">@userEmail</span>
-        <form method="get" action="@Url.Action("Logout", "Accounts")">
-            <button type="submit" class="logout-btn">Logout</button>
-        </form>
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Header -->
+    <div class="header" id="header">
+        <button class="hamburger" id="toggleBtn">&#9776;</button>
+        <div>
+            <span style="margin-right:15px;">@userEmail</span>
+            <form method="get" action="@Url.Action("Logout", "Accounts")" style="display:inline;">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
     </div>
 
-    <div class="main">
+    <!-- Main content -->
+    <div class="main" id="main">
         @RenderBody()
     </div>
+
+    <!-- JS for sidebar toggle -->
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const main = document.getElementById('main');
+        const header = document.getElementById('header');
+        const overlay = document.getElementById('overlay');
+        const toggleBtn = document.getElementById('toggleBtn');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            main.classList.toggle('collapsed');
+            header.classList.toggle('collapsed');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.add('collapsed');
+            main.classList.add('collapsed');
+            header.classList.add('collapsed');
+            overlay.classList.remove('active');
+        });
+    </script>
+
 </body>
 </html>
